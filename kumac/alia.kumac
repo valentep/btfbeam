@@ -1,0 +1,3 @@
+alias/crea pbck sqrt(pxbck**2+pybck**2+pzbck**2)
+alias/crea thetabck acos(pzbck/sqrt(pxbck**2+pybck**2+pzbck**2))
+alias/create rbck sqrt(xbck**2+ybck**2)

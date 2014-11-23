@@ -1,0 +1,2 @@
+#!/bin/csh
+gfortran btfbeam.f -w  -m32 -o btfbeam -L . -lgeant321 -lgraflib -lgrafX11 -lblas -lpacklib -lpawlib -lmathlib -lnsl -lX11 -lshift

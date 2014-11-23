@@ -1,0 +1,95 @@
+C --------------------------------------------------------
+C GEANT Data Cards
+C --------------------------------------------------------
+C
+C Events to be generated
+C
+TRIG	20000
+C
+C Run Number, comment this line if you want auto-increment
+C of run number using rapbeam.seed file!!!
+C
+cRUNG	1
+C
+C RANDOM seeds, comment this line to read last used seeds
+C from rapbeam.seed file!!!
+C
+cRNDM	0 0
+C
+C CUTS for physics processes (see GEANT manual)
+C
+c       CUTGAM  CUTELE  CUTNEU  CUTHAD  CUTMUO  BCUTE   BCUTM   DCUTE   DCUTM   PPCUTM
+C
+CCUTS	.000010 .000010 .000010 .000010 .000010 .000010 .000010 .000010 .000010 .000010 
+LOSS	2
+DRAY	0
+C
+C --------------------------------------------------------
+C Beam parameters
+C --------------------------------------------------------
+C
+C Beam position: X (cm) Y (cm) Z(cm) 
+C
+XBEA	0. 0. -100.0 
+C
+C Beam momentum: p (GeV/c) theta (rad) phi (rad)
+C
+PBEA	.510 0. 0.
+C
+C Beam spread: sigmaX (cm) sigmaY (cm) 
+C
+SXBE	.2 .2 
+C
+C Beam spread: sigmaP (GeV) 
+C
+SPBE	.005
+C
+C Beam emittance
+C
+EMIT	1.E-3  (cm rad-1)
+C
+C Particle type
+C
+KINE	3
+C---------------------------------------------------------
+C Bar
+C --------------------------------------------------------
+C
+C Bar: IGEO=1 Cylinder, IGEO=2 Sphere, IGEO=3 Parallep. R*R*L
+C
+IGEO	3
+C Bar: radius (cm)
+C
+RBAR    9.1
+C	
+C Bar: length (cm)
+C
+LBAR    50.0
+C
+C Bar: width (cm)
+C
+WBAR    2.45
+C
+C CALorimeter distance from bar (after, +z)
+C
+DCAL	200.                              
+C                                                     
+C                              ___          __ __           __ 
+C Geometry of CALorimeter 1= /___ /     2= |  |  | 	3= |  |||
+C                            |___|/        |__|__|         |__|||
+GCAL	1	
+C --------------------------------------------------------
+C Visualization parameters:
+C --------------------------------------------------------
+C
+C Xscale Yscale theta phi psi
+C
+DRAW .07 .07 50. 30. 0.
+C --------------------------------------------------------
+C Ntuple blocks booking: 1=Yes, 0=No
+C --------------------------------------------------------
+HBEA	1
+HBAR	0
+HFRW	1
+HBCK	1
+HCAL	0

@@ -1,0 +1,8 @@
+*** Begin of history file: Fri Nov 21 22:27:50 2014
+h/fil 1 /tmp/btf00001.hbook
+n/pl 1.pxbck**2+pybck**2
+n/pl 1.pxbck**2+pybck**2+pzbck**2
+n/pl 1.sqrt(pxbck**2+pybck**2+pzbck**2)
+n/pl 1.acos(pzbck/sqrt(pxbck**2+pybck**2+pzbck**2))
+exit
+*** End   of history file: Fri Nov 21 22:28:42 2014

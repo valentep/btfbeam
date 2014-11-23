@@ -1,0 +1,7 @@
+do k = 0, 4
+   do j = 0, 9
+      do i = 0, 9
+         chain BTF /tmp/btf00[k][j][i].hbook
+      enddo
+   enddo
+enddo
