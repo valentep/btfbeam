@@ -69,10 +69,11 @@ c
       Call FFKEY('DCAL',DISTAC,1, 'REAL')  
       Call FFKEY('GCAL',CALOGEO,1,'INTEGER')  
 c
-      Call FFKEY('Q_KX',KX,QUADMAX,  'REAL')  
-      Call FFKEY('Q_KY',KY,QUADMAX,  'REAL')  
+      Call FFKEY('QUAX',KX,QUADMAX,  'REAL')  
+      Call FFKEY('QUAY',KY,QUADMAX,  'REAL')  
       Call FFKEY('ZMIN',ZMIN,QUADMAX,'REAL')  
       Call FFKEY('ZMAX',ZMAX,QUADMAX,'REAL')  
+      CALL FFKEY('RPIP',RPIPE,2,     'REAL')
 c
       Call FFKEY('HBEA',HBEA,1,   'INTEGER')  
       Call FFKEY('HBAR',HBAR,1,   'INTEGER')  
@@ -147,29 +148,41 @@ c
       EndIf
       If(HFRW.EQ.1) Then
          Call HBNAME(1,'FRNT',NINP,
-     +        'NINP[0,300]:I,XINP(NINP):R,YINP(NINP):R,ZINP(NINP):R,'//
+     +        'NINP[0,500]:I,XINP(NINP):R,YINP(NINP):R,ZINP(NINP):R,'//
      +        'PXINP(NINP):R,PYINP(NINP):R,PZINP(NINP):R,'//
      +        'PARTINP(NINP):I')
       EndIf
       If(HBCK.EQ.1) Then
          Call HBNAME(1,'BACK',NBCK,
-     +        'NBCK[0,300]:I,XBCK(NBCK):R,YBCK(NBCK):R,ZBCK(NBCK):R,'//
+     +        'NBCK[0,500]:I,XBCK(NBCK):R,YBCK(NBCK):R,ZBCK(NBCK):R,'//
      +        'PXBCK(NBCK):R,PYBCK(NBCK):R,PZBCK(NBCK):R,'//
      +        'PARTBCK(NBCK):I')
       EndIf
+      If(HQUA.EQ.1) Then
+         Call HBNAME(1,'QUA1',NQUA1,
+     +        'NQUA1[0,500]:I,XQUA1(NQUA1):R,YQUA1(NQUA1):R,'//
+     +        'ZQUA1(NQUA1):R,'//
+     +        'PXQUA1(NQUA1):R,PYQUA1(NQUA1):R,PZQUA1(NQUA1):R,'//
+     +        'PARTQUA1(NQUA1):I')
+         Call HBNAME(1,'QUA2',NQUA2,
+     +        'NQUA2[0,500]:I,XQUA2(NQUA2):R,YQUA2(NQUA2):R,'//
+     +        'ZQUA2(NQUA2):R,'//
+     +        'PXQUA2(NQUA2):R,PYQUA2(NQUA2):R,PZQUA2(NQUA2):R,'//
+     +        'PARTQUA2(NQUA2):I')
+      EndIf
       If(HBAR.EQ.1) Then
          Call HBNAME(1,'BAR ',NBAR,
-     +        'NBAR[0,300]:I,XBAR(NBAR):R,YBAR(NBAR):R,ZBAR(NBAR):R,'//
+     +        'NBAR[0,500]:I,XBAR(NBAR):R,YBAR(NBAR):R,ZBAR(NBAR):R,'//
      +     'PXBAR(NBAR):R,PYBAR(NBAR):R,PZBAR(NBAR):R,PARTBAR(NBAR):I')
+         Call HBNAME(1,'BAR ',DEEBAR,'DEEBAR:R')
+         Call HBNAME(1,'BAR ',DXXBAR,'DXXBAR:R')
+         Call HBNAME(1,'BAR ',NNBAR,'NNBAR:I')
+         Call HBNAME(1,'BAR ',TBAR,'TBAR:R')
+         Call HBNAME(1,'BAR ',DEBAR,'DEBAR(3):R')
+         Call HBNAME(1,'BAR ',DXBAR,'DXBAR(3):R')
+         Call HBNAME(1,'BAR ',NPBAR,'NPBAR(3):R')
+         Call HBNAME(1,'BAR ',DEDXBAR,'DEDXBAR:R')
       EndIf
-      Call HBNAME(1,'BAR ',DEEBAR,'DEEBAR:R')
-      Call HBNAME(1,'BAR ',DXXBAR,'DXXBAR:R')
-      Call HBNAME(1,'BAR ',NNBAR,'NNBAR:I')
-      Call HBNAME(1,'BAR ',TBAR,'TBAR:R')
-      Call HBNAME(1,'BAR ',DEBAR,'DEBAR(3):R')
-      Call HBNAME(1,'BAR ',DXBAR,'DXBAR(3):R')
-      Call HBNAME(1,'BAR ',NPBAR,'NPBAR(3):R')
-      Call HBNAME(1,'BAR ',DEDXBAR,'DEDXBAR:R')
       If(HCAL.EQ.1) Then
          Call HBNAME(1,'CALO',DEFE, 'DEFE(3):R')
          Call HBNAME(1,'CALO',DEPB, 'DEPB(3):R')
@@ -274,7 +287,7 @@ C----------------------------------------------------------------------
 *     Tracking medium parameters:
 *
       ISVOL  = 0                ! sensitivity flag
-      IFIELD = 0                ! magnetic field flag
+      IFIELD = 1                ! magnetic field flag
       FIELDM = 20.              ! maximum field value (kGauss)
       TMAXFD = 0.               ! max angular deviation due to magnetic in one step
       STEMAX = 0.01             ! max step size permitted (cm)
@@ -284,9 +297,9 @@ C----------------------------------------------------------------------
                                 ! multiple scattering, Cerenkov, or magnetic
                                 ! field effects (cm)
 *
-*     Define Mother Volume (Air)
+*     Define Mother Volume (Vacuum)
 *     
-      CALL GSTMED(LIMBO,'MOTHTM',AIR,ISVOL,IFIELD,FIELDM,TMAXFD,
+      CALL GSTMED(LIMBO,'MOTHTM',VACUUM,ISVOL,IFIELD,FIELDM,TMAXFD,
      +            STEMAX,DEEMAX,EPSIL,STMIN,0,0)
 *
 *     Bar
@@ -297,13 +310,23 @@ C----------------------------------------------------------------------
 *
 *     Forward counter
 *
-      CALL GSTMED(FORWARD,'FORWTM',AIR
+      CALL GSTMED(FORWARD,'FORWTM',VACUUM
      +     ,ISVOL,IFIELD,FIELDM,TMAXFD
      +     ,STEMAX,DEEMAX,EPSIL,STMIN,0,0)
 *
 *     Backward counter
 *
-      CALL GSTMED(BACKWARD,'BACKTM',AIR
+      CALL GSTMED(BACKWARD,'BACKTM',VACUUM
+     +     ,ISVOL,IFIELD,FIELDM,TMAXFD
+     +     ,STEMAX,DEEMAX,EPSIL,STMIN,0,0)
+*
+*     CHECKQ1,2
+*
+      CALL GSTMED(CHECKQ1,'Q1TM',VACUUM
+     +     ,ISVOL,IFIELD,FIELDM,TMAXFD
+     +     ,STEMAX,DEEMAX,EPSIL,STMIN,0,0)
+
+      CALL GSTMED(CHECKQ2,'Q2TM',VACUUM
      +     ,ISVOL,IFIELD,FIELDM,TMAXFD
      +     ,STEMAX,DEEMAX,EPSIL,STMIN,0,0)
 
@@ -321,6 +344,11 @@ C----------------------------------------------------------------------
 *
       CALL GSTMED(SKIN,'IRON',IRON,ISVOL,IFIELD,FIELDM
      +     ,TMAXFD,STEMAX,DEEMAX,EPSIL,STMIN,0,0)
+*     *
+*     Pipe: iron
+*
+      CALL GSTMED(IPIP,'IRON',IRON,ISVOL,IFIELD,FIELDM
+     +     ,TMAXFD,STEMAX,DEEMAX,EPSIL,STMIN,0,0)
 *     
       RETURN
       END
@@ -337,7 +365,7 @@ C----------------------------------------------------------------------
 *     Local variables
 *
       Real MOTH(3)
-      Real FRNT(3),BACK(3),BAR(6),DISTA,DISTABACK
+      Real FRNT(3),BACK(3),BAR(6),DISTA,DISTABACK,PIPEV(5),QUAV(3)
       Real CALO(3),CALODIM(3),CALOEXT(3),NPLA,OFFSET
       Integer IVOL
       Real XSLI
@@ -364,11 +392,11 @@ c
       ROTC(5) = 0.
       ROTC(6) = 0.
 *
-*     Define mother volume (Air):
+*     Define mother volume 
 *     
-      MOTH(1) = 300.0           ! (half length, cm)
-      MOTH(2) = 300.0           ! (half length, cm)
-      MOTH(3) = 300.0           ! (half length, cm)   
+      MOTH(1) = 500.0           ! (half length, cm)
+      MOTH(2) = 500.0           ! (half length, cm)
+      MOTH(3) = 500.0           ! (half length, cm)   
       CALL GSVOLU('MOTH','BOX ',LIMBO,MOTH,3,IVOL)
 *
 *     Define BAR
@@ -377,6 +405,7 @@ c
          BAR(1) = 0.            ! (r min, cm)
          BAR(2) = RBAR          ! (r max, cm)
          BAR(3) = 0.5*LBAR      ! (half length z, cm)
+         DDBAR  = RBAR
          Call GSVOLU('BAR ','TUBE',THEBAR,BAR,3,IVOL)
       elseif(igeobar.eq.2) then
          BAR(1) = 0.            ! (r min, cm)
@@ -385,22 +414,47 @@ c
          BAR(4) = 180.          ! (theta max)
          BAR(5) = 0.            ! (phi min)
          BAR(6) = 360.            ! (phi max)
+         DDBAR  = RBAR
          Call GSVOLU('BAR ','SPHE',THEBAR,BAR,6,IVOL)
       elseif(igeobar.eq.3) then
          BAR(1) = 0.5*WBAR
          BAR(2) = 0.5*RBAR
          BAR(3) = 0.5*LBAR
+         DDBAR  = 0.5*WBAR
          CALL GSVOLU('BAR ','BOX ',THEBAR,BAR,3,IVOL)
       endif
-
+*
+*     Define pipe
+*
+      PIPEV(1)=RPIPE(1)
+      PIPEV(2)=RPIPE(2)
+      PIPEV(3)=150.0
+      PIPEV(4)=0.0
+      PIPEV(5)=360.
+      CALL GSVOLU('PIPE','TUBS',IPIP,PIPEV,5,IVOL)
 *
 *     Define volume in front of BAR
 *     
-      FRNT(1) = 0.5             ! (half length x, cm)
-      FRNT(2) = 100.            ! (half length y, cm)
-      FRNT(3) = 100.            ! (half length z, cm)
+      FRNT(1) = 0.1             ! (half length x, cm)
+      FRNT(2) = 5.            ! (half length y, cm)
+      FRNT(3) = 5.            ! (half length z, cm)
       DISTA = -BAR(2)-1.        ! (distance from origin, cm)
       Call GSVOLU('FRNT','BOX ',LIMBO,FRNT,3,IVOL)
+*
+*     Define Counting surface (BACK)
+*     
+      BACK(1) = 5.              ! (half length x, cm)
+      BACK(2) = 5.              ! (half length y, cm)
+      BACK(3) = .1              ! (half length z, cm)
+      Call GSVOLU('BACK','BOX ',BACKWARD,BACK,3,IVOL)
+*
+*     Define Q1 counting volume
+*     
+      QUAV(1) = 5.              ! (half length x, cm)
+      QUAV(2) = 5.              ! (half length y, cm)
+      QUAV(3) = .1              ! (half length z, cm)
+      Call GSVOLU('QUA1','BOX ',CHECKQ1,QUAV,3,IVOL)
+      Call GSVOLU('QUA2','BOX ',CHECKQ2,QUAV,3,IVOL)
 *
 *     Define CALOrimeter
 *     
@@ -458,20 +512,17 @@ c
       CALL GSDVT ('C_PB','EC2M',S_SCI+S_PB,2,R_LEAD,NPLANES)
       CALL GSDVN2('C_SC','C_PB',1,2,OFFSET,R_ACTIVE,6)
 *
-*     Define Counting surface (BACK)
-*     
-      BACK(1) = 100.            ! (half length x, cm)
-      BACK(2) = 100.            ! (half length y, cm)
-      BACK(3) = .5              ! (half length z, cm)
-      Call GSVOLU('BACK','BOX ',BACKWARD,BACK,3,IVOL)
-*
 *     Position volumes...
 *
       CALL GSROTM(1,ROTA(1),ROTA(2),ROTA(3),ROTA(4),ROTA(5),ROTA(6))
       CALL GSROTM(2,ROTB(1),ROTB(2),ROTB(3),ROTB(4),ROTB(5),ROTB(6))
       CALL GSROTM(3,ROTC(1),ROTC(2),ROTC(3),ROTC(4),ROTC(5),ROTC(6))
 c
+      CALL GSPOS('PIPE',1,'MOTH',0.0,0.0,DDBAR+PIPEV(3),0,'ONLY')
       CALL GSPOS('FRNT',1,'MOTH',0.0,0.0,DISTA,1,'ONLY')
+
+      CALL GSPOS('QUA1',1,'MOTH',0.0,0.0,ZMAX(1)+1.,0,'ONLY')      
+      CALL GSPOS('QUA2',1,'MOTH',0.0,0.0,ZMAX(2)+1.,0,'ONLY')
 c
       if(igeobar.ne.0) CALL GSPOS('BAR ',1,'MOTH',0.0,0.0,0.0,2,'ONLY')
 c
@@ -511,16 +562,22 @@ c
       CALL GDOPT ('SHAD','OFF ')
       CALL GDOPT ('PROJ','PERS')
       CALL GSATT ('MOTH','SEEN',0)
+      CALL GSATT ('PIPE','SEEN',5)
+      CALL GSATT ('PIPE','COLO',1)
       CALL GSATT ('BAR ','COLO',1)
       CALL GSATT ('BACK','COLO',5)
-      CALL GSATT ('FRNT','COLO',3)
-
+      CALL GSATT ('FRNT','COLO',5)
+      CALL GSATT ('QUA1','COLO',5)
+      CALL GSATT ('QUA2','COLO',5)
+c
       CALL GSATT ('C_PB','COLO',1)
       CALL GSATT ('C_SC','COLO',4)
       CALL GSATT ('IRON','COLO',1)
-
+c
       CALL GSATT ('FRNT','SEEN',1)
       CALL GSATT ('BACK','SEEN',1)
+      CALL GSATT ('QUA1','SEEN',1)
+      CALL GSATT ('QUA2','SEEN',1)
       CALL GSATT ('IRON','SEEN',1)
       CALL GSATT ('EC2M','SEEN',1)
       CALL GSATT ('C_PB','SEEN',1)
@@ -764,6 +821,24 @@ c
             PYBCK(IBCK)=VECT(5)*VECT(7)
             PZBCK(IBCK)=VECT(6)*VECT(7)
             PARTBCK(IBCK)=IPART
+         ElseIf(VOLNAM.EQ.'QUA1'.AND.IQUA1.LT.MAXPART) Then
+            IQUA1 = IQUA1+1
+            XQUA1(IQUA1)=VECT(1)
+            YQUA1(IQUA1)=VECT(2)
+            ZQUA1(IQUA1)=VECT(3)
+            PXQUA1(IQUA1)=VECT(4)*VECT(7)
+            PYQUA1(IQUA1)=VECT(5)*VECT(7)
+            PZQUA1(IQUA1)=VECT(6)*VECT(7)
+            PARTQUA1(IQUA1)=IPART
+         ElseIf(VOLNAM.EQ.'QUA2'.AND.IQUA2.LT.MAXPART) Then
+            IQUA2 = IQUA2+1
+            XQUA2(IQUA2)=VECT(1)
+            YQUA2(IQUA2)=VECT(2)
+            ZQUA2(IQUA2)=VECT(3)
+            PXQUA2(IQUA2)=VECT(4)*VECT(7)
+            PYQUA2(IQUA2)=VECT(5)*VECT(7)
+            PZQUA2(IQUA2)=VECT(6)*VECT(7)
+            PARTQUA2(IQUA2)=IPART
          ElseIf(VOLNAM.EQ.'BAR') Then
 
          EndIf
@@ -788,6 +863,8 @@ c      CALL GPGKIN
 *
       NINP=IINP
       NBCK=IBCK
+      NQUA1=IQUA1
+      NQUA2=IQUA2
       NBAR=IBAR
       CALL HFNT(1) ! fill dell'entupla
       CALL GDXYZ(0)
@@ -857,9 +934,10 @@ c
  986  CONTINUE
       IF (JQUAD.EQ.0) GOTO 987
       RR2=XX(1)*XX(1)+XX(2)*XX(2)
-      IF(RR2.GE.RPIPE(JQUAD)*RPIPE(JQUAD)) GOTO 987
+      IF(RR2.GE.RPIPE(1)*RPIPE(1)) GOTO 987
       FF(1)=KX(JQUAD)*XX(2)
       FF(2)=KY(JQUAD)*XX(1)
+C      print *,'GUFLD',XX,FF
 *     
  987  RETURN
       END
@@ -905,6 +983,8 @@ c
          IINP=0
          IBCK=0
          IBAR=0
+         IQUA1=0
+         IQUA2=0
          NNBAR=0
          DXXBAR=0
          DEEBAR=0
@@ -936,7 +1016,22 @@ c
          CALL VZERO(PZBCK,MAXPART)
          CALL VZERO(PARTBCK,MAXPART)
 c
-
+         CALL VZERO(XQUA1,MAXPART)
+         CALL VZERO(YQUA1,MAXPART)
+         CALL VZERO(ZQUA1,MAXPART)
+         CALL VZERO(PXQUA1,MAXPART)
+         CALL VZERO(PYQUA1,MAXPART)
+         CALL VZERO(PZQUA1,MAXPART)
+         CALL VZERO(PARTQUA1,MAXPART)
+c
+         CALL VZERO(XQUA2,MAXPART)
+         CALL VZERO(YQUA2,MAXPART)
+         CALL VZERO(ZQUA2,MAXPART)
+         CALL VZERO(PXQUA2,MAXPART)
+         CALL VZERO(PYQUA2,MAXPART)
+         CALL VZERO(PZQUA2,MAXPART)
+         CALL VZERO(PARTQUA2,MAXPART)
+c
          If(MOD(IEVENT,100).EQ.0)
      &        Print *,' ************************* EVENT ',
      &        ' ************************* ',I

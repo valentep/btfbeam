@@ -2,13 +2,12 @@ C --------------------------------------------------------
 C GEANT Data Cards
 C --------------------------------------------------------
 C ------ Events to be generated
-TRIG	20000
+TRIG	10000
 C ------ Run Number, comment this line if you want auto-increment using rapbeam.seed
-RUNG	12345
+cRUNG	10000
 C ------ RANDOM seeds, comment this line to read last used seeds from rapbeam.seed 
-RNDM	0 0
-C ------ CUTS for physics processes (see GEANT manual)
-c       CUTGAM  CUTELE  CUTNEU  CUTHAD  CUTMUO  BCUTE   BCUTM   DCUTE   DCUTM   PPCUTM
+cRNDM	0 0
+C       CUTGAM  CUTELE  CUTNEU  CUTHAD  CUTMUO  BCUTE   BCUTM   DCUTE   DCUTM   PPCUTM
 C ------
 CCUTS	.000010 .000010 .000010 .000010 .000010 .000010 .000010 .000010 .000010 .000010 
 LOSS	2
@@ -16,8 +15,8 @@ DRAY	0
 C --------------------------------------------------------
 C Beam parameters
 C --------------------------------------------------------
-C ------ Beam position: X (cm) Y (cm) Z(cm) 
-XBEA	0. 0. -100.0 
+C ------ Beam position: X (cm) Y (cm) Z(cm) (with respect to target!)
+XBEA	0. 0. -10.0 
 C ------ Beam momentum: p (GeV/c) theta (rad) phi (rad)
 PBEA	.510 0. 0.
 C ------ Beam spread: sigmaX (cm) sigmaY (cm) 
@@ -25,14 +24,25 @@ SXBE	.2 .2
 C ------ Beam spread: sigmaP (GeV) 
 SPBE	.005
 C ------ Beam emittance
-EMIT	1.E-3  (cm rad-1)
+EMIT	1.E-4  (cm rad-1)
 C ------ Particle type
 KINE	3
+C ------ Beam pipe, inner/outer radius (cm)
+RPIP	2.8 3.0
+C -------------------------------------------------------- 
+Two quadupoles 
+C -------------------------------------------------------- 
+C ------ K (kGauss/cm)
+QUAX	 5. 5.
+QUAY	 -2. -2.
+C ------ position along beam of front/back faces (cm)
+ZMIN	 148.5    201.
+ZMAX	 165.0 	  217.5
 C---------------------------------------------------------
 C Bar
 C --------------------------------------------------------
 C ------ IGEO=1 Cylinder, IGEO=2 Sphere, IGEO=3 Parallep. R*R*L
-IGEO	3
+IGEO	3.
 C ------ Radius (cm)
 RBAR    9.1
 C ------ Length (cm)
@@ -40,7 +50,7 @@ LBAR    50.0
 C ------ Width (cm)
 WBAR    2.45
 C ------ CALorimeter distance from bar (after, +z)
-DCAL	200.                                  
+DCAL	300.                                  
 C--------------------------------------------------------- 
 C                              ___          __ __           __ 
 C Geometry of CALorimeter 1= /___ /     2= |  |  | 	3= |  |||
@@ -49,7 +59,7 @@ GCAL	1
 C --------------------------------------------------------
 C Visualization parameters: Xscale Yscale theta phi psi
 C --------------------------------------------------------
-DRAW .07 .07 50. 30. 0.
+DRAW .07 .07 50. 15. 0.
 C --------------------------------------------------------
 C Ntuple blocks booking: 1=Yes, 0=No
 C --------------------------------------------------------
@@ -58,3 +68,4 @@ HBAR	0
 HFRW	1
 HBCK	1
 HCAL	0
+HQUA    1
